@@ -1,0 +1,1 @@
+export const selectUserCart = (state) => state.CartReducer.data
