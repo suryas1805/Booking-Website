@@ -5,6 +5,7 @@ import { updateProfileDetails } from '../../features/Profile/services';
 import { formatDate, formatDateTime } from '../../utils/formatter';
 import { useNavigate } from 'react-router-dom';
 import { getImageUrl } from '../../utils/imageUtils';
+import dummyImage from '../../assets/images/dummy-image.jpg'
 
 const UserProfile = React.memo(({ profileData, bookingsData, activityData, onRefresh }) => {
     const { user } = useAuth();
@@ -125,7 +126,7 @@ const UserProfile = React.memo(({ profileData, bookingsData, activityData, onRef
                         <div className="flex flex-col items-center mb-6">
                             <div className="relative">
                                 <img
-                                    src={previewImage || '/default-avatar.png'}
+                                    src={previewImage || dummyImage}
                                     alt="Profile"
                                     className="w-24 h-24 rounded-full object-cover"
                                 />
