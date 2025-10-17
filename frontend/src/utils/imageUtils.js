@@ -1,8 +1,12 @@
-// const baseUrl = "http://localhost:3000";
-const baseUrl = import.meta.env.VITE_API_URL;
+// utils/imageUtils.js
+export const getImageUrl = (path) => {
+    if (!path) return null;
 
-export const getImageUrl = (imagePath) => {
-    if (!imagePath) return "";
-    const formattedPath = imagePath.startsWith("/") ? imagePath : `/${imagePath}`;
-    return `${baseUrl}${formattedPath}`;
+    // Cloudinary URLs are absolute, return as-is
+    if (path.startsWith('http') || path.startsWith('https')) {
+        return path;
+    }
+
+    // Fallback (for old local images)
+    return `${import.meta.env.VITE_API_BASE_URL}${path}`;
 };
