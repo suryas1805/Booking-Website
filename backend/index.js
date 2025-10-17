@@ -19,7 +19,7 @@ const app = express()
 const PORT = process.env.PORT || 5000
 
 app.use(cors({
-    origin: ['https://booking-website-1-jjiz.onrender.com', 'http://localhost:5173', 'http://localhost:5174', 'http://localhost:5175'],
+    origin: ['https://bookingsappsample.netlify.app/', 'http://localhost:5173', 'http://localhost:5174', 'http://localhost:5175'],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
