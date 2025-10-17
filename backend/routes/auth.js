@@ -6,7 +6,8 @@ const User = require('../models/UserModal')
 const authMiddleware = require('../middleware/authMiddleware')
 const logActivity = require('../utils/logActivity')
 const Booking = require('../models/BookingModal')
-const upload = require('../middleware/imageUpload')
+// const upload = require('../middleware/imageUpload')
+const upload = require('../middleware/cloudinaryUpload')
 const multer = require('multer')
 const sendPushNotification = require('../utils/oneSignal')
 
@@ -120,45 +121,57 @@ router.get('/user/:id', authMiddleware, async (req, res) => {
 })
 
 //update user details by id
-router.put('/user/:id', authMiddleware, (req, res, next) => {
-    upload.single('image')(req, res, function (err) {
-        if (err instanceof multer.MulterError) {
-            if (err.code === 'LIMIT_FILE_SIZE') {
-                return res.status(400).json({ msg: 'Image size should not exceed 5MB' });
+router.put(
+    '/user/:id',
+    authMiddleware,
+    (req, res, next) => {
+        upload.single('image')(req, res, function (err) {
+            if (err instanceof multer.MulterError) {
+                if (err.code === 'LIMIT_FILE_SIZE') {
+                    return res.status(400).json({ msg: 'Image size should not exceed 5MB' });
+                }
+                console.error('MulterError:', err);
+                return res.status(400).json({ msg: err.message });
+            } else if (err) {
+                console.error('Upload error details:', err);
+                return res.status(500).json({ msg: 'Upload error', error: err });
             }
-            return res.status(400).json({ msg: err.message });
-        } else if (err) {
-            return res.status(500).json({ msg: 'Upload error', error: err.message });
-        }
-        next();
-    });
-}, async (req, res) => {
-    try {
-        const { id } = req.params
-
-        const updateData = { ...req.body };
-        if (req.file) {
-            updateData.image = `/uploads/${req.file.filename}`;
-        }
-
-        const user = await User.findByIdAndUpdate(id, updateData, { new: true })
-        if (!user) return res.status(404).json({ msg: "User not found" })
-
-        const userWithoutPassword = user.toObject()
-        delete userWithoutPassword.password
-
-        await logActivity({
-            user: user?._id,
-            action: 'User profile update',
-            description: `User ${user?.name} updated profile information.`,
-            type: 'user',
+            next();
         });
+    },
+    async (req, res) => {
+        try {
+            const { id } = req.params;
 
-        res.status(200).json({ msg: "User details updated successfully", data: userWithoutPassword })
-    } catch (error) {
-        res.status(500).json({ msg: 'Internal Server Error' })
+            const updateData = {
+                ...req.body
+            };
+
+            if (req.file) updateData.image = req.file.path;
+
+            const user = await User.findByIdAndUpdate(id, updateData, { new: true });
+            if (!user) return res.status(404).json({ msg: 'User not found' });
+
+            const userWithoutPassword = user.toObject();
+            delete userWithoutPassword.password;
+
+            await logActivity({
+                user: user?._id,
+                action: 'User profile update',
+                description: `User ${user?.name} updated profile information.`,
+                type: 'user',
+            });
+
+            return res.status(200).json({
+                msg: 'User details updated successfully',
+                data: userWithoutPassword,
+            });
+        } catch (error) {
+            console.error('Error updating user:', error);
+            return res.status(500).json({ msg: 'Internal Server Error', error: error.message });
+        }
     }
-})
+);
 
 //delete user details by id
 router.delete('/user/:id', authMiddleware, async (req, res) => {

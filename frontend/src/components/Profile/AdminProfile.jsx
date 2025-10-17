@@ -5,6 +5,7 @@ import { updateProfileDetails } from '../../features/Profile/services';
 import { formatDate, formatDateTime } from '../../utils/formatter';
 import { useNavigate } from 'react-router-dom';
 import { getImageUrl } from '../../utils/imageUtils';
+import dummyImage from '../../assets/images/dummy-image.jpg'
 
 const AdminProfile = React.memo(({ profileData, activityData, onRefresh }) => {
     const { user } = useAuth();
@@ -153,7 +154,7 @@ const AdminProfile = React.memo(({ profileData, activityData, onRefresh }) => {
                                                     ? previewImage.startsWith('blob:')
                                                         ? previewImage
                                                         : `${previewImage}`
-                                                    : '/default-avatar.png'
+                                                    : dummyImage
                                             }
                                             alt="Profile"
                                             className="w-32 h-32 rounded-full object-cover"

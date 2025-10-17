@@ -237,6 +237,7 @@ const BookingDetailsModal = ({ isOpen, onClose, booking, isAdmin, onRefresh }) =
                                                 <p>{booking?.user?.contact?.address}</p>
                                                 <p>{booking?.user?.contact?.city}, {booking?.user?.contact?.state} {booking?.user?.contact?.postal_code}</p>
                                                 <p>{booking?.user?.contact?.country || 'India'}</p>
+                                                <p>Phone Number: {booking?.user?.contact?.phone_number}</p>
                                             </div>
                                         </div>
 

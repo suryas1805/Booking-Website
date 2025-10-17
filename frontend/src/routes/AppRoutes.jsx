@@ -11,6 +11,7 @@ import ChangePassword from '../components/Auth/ChangePassword';
 import Users from '../pages/Users/Users'
 import HelpCenter from '../pages/HelpCenter/HelpCenter'
 import OffersPage from '../pages/Offers/OffersPage'
+import NotFoundPage from '../components/NotFoundPage';
 
 function ProtectedRoute({ children }) {
     const { user, loading } = useAuth();
@@ -121,6 +122,7 @@ function AppRoutes() {
                     </ProtectedRoute>
                 }
             />
+            <Route path="*" element={<NotFoundPage />} />
             <Route path="/" element={<Navigate to="/dashboard" />} />
         </Routes>
     );
