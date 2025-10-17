@@ -55,15 +55,24 @@ class httpClient {
         return response
     }
 
-    async uploadPut(url, data, params) {
-        const response = await Axios.put(url, data, {
-            params,
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            }
-        })
-        return response
+    async uploadPut(url, data, params = {}) {
+        try {
+            const response = await Axios.put(url, data, {
+                params,
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+                withCredentials: true,
+                maxContentLength: Infinity,
+                maxBodyLength: Infinity,
+            });
+            return response;
+        } catch (error) {
+            console.error('Upload PUT error:', error.response?.data || error.message);
+            throw error;
+        }
     }
+
 }
 
 export default new httpClient()
