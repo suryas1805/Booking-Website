@@ -6,7 +6,9 @@ class Client {
         login: async (data) => httpClient.post(httpEndPoints.login, data),
         register: async (data) => httpClient.post(httpEndPoints.register, data),
         logout: async () => httpClient.post(httpEndPoints.logout),
-        changePassword: async (data) => httpClient.put(httpEndPoints.changePassword, data)
+        changePassword: async (data) => httpClient.put(httpEndPoints.changePassword, data),
+        emailVerify: async (data) => httpClient.post(httpEndPoints.emailVerify, data),
+        otpVerify: async (data) => httpClient.post(httpEndPoints.otpVerify, data)
     }
     users = {
         getAllUsers: async () => httpClient.get(httpEndPoints.getAllUsers),

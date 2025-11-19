@@ -10,6 +10,9 @@ const Booking = require('../models/BookingModal')
 const upload = require('../middleware/cloudinaryUpload')
 const multer = require('multer')
 const sendPushNotification = require('../utils/oneSignal')
+const Otp = require('otp-generator')
+const crypto = require('crypto')
+const OtpModal = require('../models/OtpModal')
 
 // User registration
 router.post('/register', async (req, res) => {
@@ -186,8 +189,53 @@ router.delete('/user/:id', authMiddleware, async (req, res) => {
     }
 })
 
+//email verifiy and generate otp and token
+router.post('/email-verify', async (req, res) => {
+    try {
+        const { email } = req.body
+
+        const user = await User.findOne({ email })
+        if (!user) return res.status(404).json({ success: false, msg: "User not found with this email" })
+
+        const otp = Otp.generate(6, { digits: true, lowerCaseAlphabets: false, upperCaseAlphabets: false, specialChars: false })
+
+        const token = crypto.randomBytes(5).toString('hex')
+
+        const existsUserOtp = await OtpModal.findOne({ email })
+
+        if (existsUserOtp) return res.status(200).json({ msg: "Otp already sent to your email" })
+
+        const otpData = await OtpModal.create({ email, otp, token })
+
+        const result = {
+            email: otpData.email,
+            otp: otpData.otp,
+            token: otpData.token
+        }
+        return res.status(200).json({ msg: "Email verified successfully", data: result })
+
+    } catch (error) {
+        res.status(500).json({ success: false, msg: 'Internal Server Error' })
+    }
+})
+
+//otp verify
+router.post('/otp-verify', async (req, res) => {
+    try {
+        const { email, otp, token } = req.body
+        const validEmailandUser = await OtpModal.findOne({ email, otp, token })
+
+        if (!validEmailandUser) return res.status(400).json({ msg: "Otp expired or Invalid Otp" })
+
+        res.status(200).json({ success: true, msg: "Otp verified successfully" })
+
+    } catch (error) {
+        res.status(500).json({ msg: 'Internal Server Error' })
+    }
+})
+
 //update user password by id
-router.put('/change-password/', async (req, res) => {
+router.put('/change-password', async (req, res) => {
     try {
         const { email, newPassword, confirmPassword } = req.body
 

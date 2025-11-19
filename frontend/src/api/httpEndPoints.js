@@ -7,7 +7,9 @@ const httpEndPoints = {
     updateUserById: `/auth/user/:userId`,
     deleteUserById: `/auth/user/:userId`,
     logout: '/auth/logout',
-    changePassword: '/auth/change-password/',
+    emailVerify: '/auth/email-verify',
+    otpVerify: '/auth/otp-verify',
+    changePassword: '/auth/change-password',
     category: {
         getAll: '/category/getAll',
         getById: '/category/get/:categoryId',

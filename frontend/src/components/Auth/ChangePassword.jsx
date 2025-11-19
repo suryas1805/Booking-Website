@@ -2,12 +2,11 @@ import { useState } from 'react';
 import { FaRegEye } from "react-icons/fa";
 import { FaRegEyeSlash } from "react-icons/fa";
 import { useToast } from '../../context/ToastContext'
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { changePasswordService } from '../../features/Auth/services';
 
 const ChangePassword = () => {
     const [formData, setFormData] = useState({
-        email: '',
         newPassword: '',
         confirmPassword: ''
     });
@@ -19,13 +18,11 @@ const ChangePassword = () => {
         new: false,
         confirm: false,
     });
+    const location = useLocation();
+    const email = location.state?.email;
 
     const validate = () => {
         const newErrors = {};
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-        if (!formData.email.trim()) newErrors.email = 'Email is required';
-        else if (!emailRegex.test(formData.email)) newErrors.email = 'Invalid email address';
 
         if (!formData.newPassword.trim()) newErrors.newPassword = 'New password is required';
         else if (formData.newPassword.length < 6)
@@ -52,15 +49,15 @@ const ChangePassword = () => {
         setLoading(true);
 
         try {
-
+            formData.email = email
             const response = await changePasswordService(formData);
-            if (response) {
+            if (response?.status === 200) {
                 addToast('Password changed successfully!', 'success');
-                setFormData({ email: '', newPassword: '', confirmPassword: '' });
+                setFormData({ newPassword: '', confirmPassword: '' });
                 navigate('/login')
             }
             else {
-                addToast('Invalid email. Please try again.', 'error');
+                addToast(response?.msg, 'error');
             }
         } catch (error) {
             console.log(error)
@@ -76,20 +73,6 @@ const ChangePassword = () => {
                 <h2 className="text-3xl font-bold text-gray-800 text-center mb-6">Change Password</h2>
 
                 <form onSubmit={handleSubmit} className="space-y-5">
-                    {/* Email */}
-                    <div>
-                        <label className="block text-gray-700 font-medium mb-1">Email Address</label>
-                        <input
-                            type="email"
-                            name="email"
-                            value={formData.email}
-                            onChange={handleChange}
-                            className={`w-full px-4 py-2 border ${errors.email ? 'border-red-500' : 'border-gray-300'
-                                } rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500`}
-                            placeholder="Enter your email"
-                        />
-                        {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
-                    </div>
 
                     {/* New Password */}
                     <div className="relative">
