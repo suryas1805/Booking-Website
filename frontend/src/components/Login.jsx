@@ -45,18 +45,18 @@ const Login = () => {
             setLoading(true);
             try {
                 const response = await authLogin(formData);
-                if (response?.data?.user) {
+                if (response?.status === 200) {
                     const userId = response.data.user._id.toString();
                     setExternalUser(userId);
                     login(response.data.user, response.data.token);
                     addToast('Login successful! Welcome back.', 'success');
                     navigate('/dashboard');
                 } else {
-                    addToast('Invalid email or password. Please try again.', 'error');
+                    addToast(response?.msg || 'Invalid email or password. Please try again.', 'error');
                 }
             } catch (error) {
                 console.error(error);
-                addToast('Network error. Please check your connection.', 'error');
+                addToast('Invalid email or password. Please try again.', 'error');
             } finally {
                 setLoading(false);
             }
@@ -126,7 +126,7 @@ const Login = () => {
                 </form>
 
                 <div className='mt-4 flex justify-end'>
-                    <button onClick={() => navigate('/change-password')}>
+                    <button onClick={() => navigate('/email-verify')}>
                         <p className='text-red-500 text-sm hover:underline'>Forgot Password</p>
                     </button>
                 </div>

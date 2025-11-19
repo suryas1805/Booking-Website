@@ -8,6 +8,7 @@ export const authLogin = async (data) => {
         }
     } catch (error) {
         console.log(error)
+        return error
     }
 }
 
@@ -19,6 +20,7 @@ export const authRegister = async (data) => {
         }
     } catch (error) {
         console.log(error)
+        return error
     }
 }
 
@@ -30,6 +32,7 @@ export const authLogout = async () => {
         }
     } catch (error) {
         console.log(error)
+        return error
     }
 }
 
@@ -41,6 +44,29 @@ export const changePasswordService = async (data) => {
         }
     } catch (error) {
         console.log(error)
+        return error
+    }
+}
+export const emailVerificationService = async (data) => {
+    try {
+        const response = await Client.auth.emailVerify(data)
+        if (response) {
+            return response
+        }
+    } catch (error) {
+        console.log(error)
+        return error
+    }
+}
+export const otpVerificationService = async (data) => {
+    try {
+        const response = await Client.auth.otpVerify(data)
+        if (response) {
+            return response
+        }
+    } catch (error) {
+        console.log(error)
+        return error
     }
 }
 

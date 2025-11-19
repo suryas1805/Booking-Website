@@ -73,7 +73,7 @@ const Navbar = () => {
                     {/* User Info & Logout */}
                     <div className="hidden md:flex items-center space-x-4">
                         <span className="text-sm text-gray-700">
-                            Welcome, {`${user?.name.charAt(0).toUpperCase()}${user?.name.slice(1)}`}
+                            Welcome, {`${user?.name?.charAt(0)?.toUpperCase()}${user?.name?.slice(1)}`}
                         </span>
                         <button
                             onClick={() => setIsModalOpen(true)}

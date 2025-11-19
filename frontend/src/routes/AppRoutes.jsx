@@ -12,6 +12,8 @@ import Users from '../pages/Users/Users'
 import HelpCenter from '../pages/HelpCenter/HelpCenter'
 import OffersPage from '../pages/Offers/OffersPage'
 import NotFoundPage from '../components/NotFoundPage';
+import EmailVerification from '../components/Auth/EmailVerification';
+import OtpVerification from '../components/Auth/OtpVerification';
 
 function ProtectedRoute({ children }) {
     const { user, loading } = useAuth();
@@ -47,6 +49,22 @@ function AppRoutes() {
                 element={
                     <PublicRoute>
                         <Register />
+                    </PublicRoute>
+                }
+            />
+            <Route
+                path="/email-verify"
+                element={
+                    <PublicRoute>
+                        <EmailVerification />
+                    </PublicRoute>
+                }
+            />
+            <Route
+                path="/otp-verify"
+                element={
+                    <PublicRoute>
+                        <OtpVerification />
                     </PublicRoute>
                 }
             />
