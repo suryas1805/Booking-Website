@@ -29,11 +29,11 @@ router.post('/register', async (req, res) => {
         await newUser.save();
 
         // Send welcome push notification
-        await sendPushNotification({
-            title: 'Welcome!',
-            message: `Hi ${newUser.email}, your account has been created successfully!`,
-            userIds: [newUser._id]
-        });
+        // await sendPushNotification({
+        //     title: 'Welcome!',
+        //     message: `Hi ${newUser.email}, your account has been created successfully!`,
+        //     userIds: [newUser._id]
+        // });
 
         res.status(201).json({ msg: 'User registered successfully', data: { newUser } });
     } catch (error) {
@@ -59,11 +59,11 @@ router.post('/login', async (req, res) => {
         );
 
         // Send push notification
-        await sendPushNotification({
-            title: 'Login Successful',
-            message: `Hi ${user.email}, you have logged in successfully.`,
-            userIds: [user._id]
-        });
+        // await sendPushNotification({
+        //     title: 'Login Successful',
+        //     message: `Hi ${user.email}, you have logged in successfully.`,
+        //     userIds: [user._id]
+        // });
 
         res.status(200).json({ token, user });
     } catch (error) {
