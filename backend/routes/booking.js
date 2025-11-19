@@ -74,7 +74,10 @@ router.post('/:userId', authMiddleware, async (req, res) => {
 router.get('/getAll', authMiddleware, async (req, res) => {
     try {
         if (req.user.role !== 'admin') return res.status(403).json({ msg: "Forbidden" })
-        const bookings = await Booking.find().populate('user', '-password').populate('products.product')
+        const bookings = await Booking.find()
+            .sort({ createdAt: -1 })
+            .populate('user', '-password')
+            .populate('products.product')
         res.status(200).json({ data: bookings })
     } catch (error) {
         res.status(500).json({ msg: "Internal Server Error" })
@@ -85,7 +88,10 @@ router.get('/getAll', authMiddleware, async (req, res) => {
 router.get('/getAll/:userId', authMiddleware, async (req, res) => {
     try {
         const { userId } = req.params
-        const bookings = await Booking.find({ user: { _id: userId } }).populate('user', '-password').populate({ path: 'products.product', populate: 'category' })
+        const bookings = await Booking.find({ user: { _id: userId } })
+            .sort({ createdAt: -1 })
+            .populate('user', '-password')
+            .populate({ path: 'products.product', populate: 'category' })
         res.status(200).json({ data: bookings })
     } catch (error) {
         res.status(500).json({ msg: "Internal Server Error" })
