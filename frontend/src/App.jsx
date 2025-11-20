@@ -9,9 +9,9 @@ import { initOneSignalSDK } from './onesignal';
 
 function App() {
 
-  useEffect(() => {
-    initOneSignalSDK();
-  }, []);
+  // useEffect(() => {
+  //   initOneSignalSDK();
+  // }, []);
 
   return (
     <ToastProvider>

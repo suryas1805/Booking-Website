@@ -6,6 +6,7 @@ import { FaRegEye } from "react-icons/fa";
 import { FaRegEyeSlash } from "react-icons/fa";
 import { useToast } from '../context/ToastContext'
 import { initOneSignalSDK, setExternalUser } from '../onesignal';
+import axios from 'axios';
 
 const Login = () => {
     const [formData, setFormData] = useState({ email: '', password: '' });
@@ -16,9 +17,9 @@ const Login = () => {
     const { login } = useAuth();
     const navigate = useNavigate();
 
-    useEffect(() => {
-        initOneSignalSDK();
-    }, []);
+    // useEffect(() => {
+    //     initOneSignalSDK();
+    // }, []);
 
     const validateForm = () => {
         const newErrors = {};
@@ -46,9 +47,9 @@ const Login = () => {
             try {
                 const response = await authLogin(formData);
                 if (response?.status === 200) {
-                    const userId = response.data.user._id.toString();
-                    setExternalUser(userId);
-                    login(response.data.user, response.data.token);
+                    // const userId = response.data.user._id.toString();
+                    // setExternalUser(userId);
+                    login(response.data.token, response.data.user);
                     addToast('Login successful! Welcome back.', 'success');
                     navigate('/dashboard');
                 } else {
@@ -61,6 +62,11 @@ const Login = () => {
                 setLoading(false);
             }
         }
+    };
+
+    const handleGoogleLogin = async () => {
+        const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/auth/google/url`);
+        window.location.href = res.data.url;
     };
 
     return (
@@ -131,13 +137,31 @@ const Login = () => {
                     </button>
                 </div>
 
-                <p className="text-center text-gray-600 text-sm mt-6">
+                <p className="text-center text-gray-600 text-sm mt-3">
                     Don't have an account?{' '}
                     <Link to="/register" className="text-indigo-600 font-medium hover:underline">
                         Sign up
                     </Link>
                 </p>
+                <p className='text-center text-gray-900 text-sm mt-2'>or</p>
+                <button
+                    onClick={handleGoogleLogin}
+                    className="w-full flex items-center justify-center gap-3 bg-white 
+               py-2.5 mt-4 rounded-xl border border-gray-300 shadow-sm
+               hover:shadow-md transition-all duration-300
+               hover:bg-gray-50 active:scale-[0.98]"
+                >
+                    <img
+                        src="https://developers.google.com/identity/images/g-logo.png"
+                        alt="Google"
+                        className="w-5 h-5"
+                    />
+                    <span className="text-gray-700 font-medium">
+                        Continue with Google
+                    </span>
+                </button>
             </div>
+
         </div>
     );
 };
