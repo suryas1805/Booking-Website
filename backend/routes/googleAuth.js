@@ -84,7 +84,7 @@ router.get("/google/callback", async (req, res) => {
         const safeUserPayload = encodeURIComponent(userPayload);
 
         return res.redirect(
-            `${process.env.FRONTEND_URL}?token=${token}&user=${safeUserPayload}`
+            `${process.env.FRONTEND_URL}/oauth-success?token=${token}&user=${safeUserPayload}`
         );
 
     } catch (err) {
