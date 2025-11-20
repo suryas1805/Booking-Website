@@ -9,7 +9,7 @@ const Booking = require('../models/BookingModal')
 // const upload = require('../middleware/imageUpload')
 const upload = require('../middleware/cloudinaryUpload')
 const multer = require('multer')
-const sendPushNotification = require('../utils/oneSignal')
+// const sendPushNotification = require('../utils/oneSignal')
 const Otp = require('otp-generator')
 const crypto = require('crypto')
 const OtpModal = require('../models/OtpModal')
@@ -58,6 +58,9 @@ router.post('/login', async (req, res) => {
             { expiresIn: '1d' }
         );
 
+        const user1 = user.toObject()
+        delete user1.password
+
         // Send push notification
         // await sendPushNotification({
         //     title: 'Login Successful',
@@ -65,7 +68,7 @@ router.post('/login', async (req, res) => {
         //     userIds: [user._id]
         // });
 
-        res.status(200).json({ token, user });
+        res.status(200).json({ token, user: user1 });
     } catch (error) {
         console.error(error);
         res.status(500).json({ msg: 'Internal Server Error' });
