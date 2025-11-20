@@ -14,6 +14,7 @@ import OffersPage from '../pages/Offers/OffersPage'
 import NotFoundPage from '../components/NotFoundPage';
 import EmailVerification from '../components/Auth/EmailVerification';
 import OtpVerification from '../components/Auth/OtpVerification';
+import OAuthSuccess from '../pages/OAuthSuccess';
 
 function ProtectedRoute({ children }) {
     const { user, loading } = useAuth();
@@ -73,6 +74,14 @@ function AppRoutes() {
                 element={
                     <PublicRoute>
                         <ChangePassword />
+                    </PublicRoute>
+                }
+            />
+            <Route
+                path="/oauth-success"
+                element={
+                    <PublicRoute>
+                        <OAuthSuccess />
                     </PublicRoute>
                 }
             />
